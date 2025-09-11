@@ -1,2 +1,2 @@
-# ProyectoSW2
-Repositorio con el proyecto de Ingeniería de Software 2
+# NeoBancoSW2
+Repositorio con el Neobanco de Ingeniería de Software 2
