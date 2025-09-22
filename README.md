@@ -1,2 +1,2 @@
-# ProyectoSW2
-Repositorio con el proyecto de Ingeniería de Software 2
+# Proyecto Ingeniería de Software ll
+Repositorio con el proyecto de Ingeniería de Software ll
