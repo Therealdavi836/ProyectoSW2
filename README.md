@@ -1,6 +1,6 @@
 # Proyecto de Concesionario Web
 
-Repositorio con el proyecto de Ingeniería de Software 2.
+Repositorio con el proyecto de Ingeniería de Software II.
 
 ## Descripción
 
@@ -9,13 +9,6 @@ Este proyecto corresponde a un sistema de concesionario web desarrollado como pa
 ## Arquitectura
 
 El sistema está compuesto por múltiples microservicios, cada uno encargado de una funcionalidad específica del concesionario (por ejemplo, autenticación, inventario de vehículos, ventas, etc.). Cada microservicio posee su propio repositorio individual, el cual incluye sus respectivas instrucciones de instalación, despliegue y uso. Esto permite un desarrollo, mantenimiento y escalabilidad independiente de cada componente.
-
-### Tecnologías principales
-
-- **PHP** (63.6%)
-- **Blade** (21.3%)
-- **Python** (14.9%)
-- **JavaScript** (0.2%)
 
 > **Nota:** Puede consultar cada repositorio de microservicio para obtener instrucciones detalladas de instalación y uso.
 
