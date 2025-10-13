@@ -19,6 +19,13 @@ El sistema está compuesto por múltiples microservicios, cada uno encargado de 
 
 > **Nota:** Consulta cada repositorio de microservicio para obtener instrucciones detalladas de instalación y uso.
 
+## Repositorios de microservicios
+- [Microservicio de Autenticación](https://github.com/Therealdavi836/Microservice_Authentication.git)
+- [Microservicio de Reportes](https://github.com/Therealdavi836/Microservice_Reports.git)
+- [Microservicio de Catalogo de Vehiculos](https://github.com/Therealdavi836/Microservice_VehicleCatalog.git)
+- [Microservicio de Publicaciones y Ventas](https://github.com/Therealdavi836/Microservice_SalesPublications.git)
+- [Microservicio de Notificaciones](https://github.com/Therealdavi836/Microservice_Notifications.git)
+
 ## Organización del proyecto
 
 - Este repositorio es el punto central de coordinación del proyecto.
