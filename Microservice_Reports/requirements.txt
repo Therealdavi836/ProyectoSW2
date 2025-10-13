@@ -1,5 +1,0 @@
-Flask
-pandas
-reportlab
-openpyxl    # Para Excel
-requests    # Para consultar otros microservicios
