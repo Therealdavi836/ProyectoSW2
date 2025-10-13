@@ -8,7 +8,7 @@ Este proyecto corresponde a un sistema de concesionario web desarrollado como pa
 
 ## Arquitectura
 
-El sistema está compuesto por múltiples microservicios, cada uno encargado de una funcionalidad específica del concesionario (por ejemplo, gestión de usuarios, inventario de vehículos, ventas, etc.). Cada microservicio posee su propio repositorio individual, el cual incluye sus respectivas instrucciones de instalación, despliegue y uso. Esto permite un desarrollo, mantenimiento y escalabilidad independiente de cada componente.
+El sistema está compuesto por múltiples microservicios, cada uno encargado de una funcionalidad específica del concesionario (por ejemplo, autenticación, inventario de vehículos, ventas, etc.). Cada microservicio posee su propio repositorio individual, el cual incluye sus respectivas instrucciones de instalación, despliegue y uso. Esto permite un desarrollo, mantenimiento y escalabilidad independiente de cada componente.
 
 ### Tecnologías principales
 
