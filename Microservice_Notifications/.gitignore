@@ -1,0 +1,16 @@
+# Archivos sensibles
+.env
+
+# Archivos de entorno y dependencias
+__pycache__/
+*.pyc
+*.pyo
+*.db
+
+# Entornos virtuales
+venv/
+env/
+
+# Archivos de configuración de IDEs
+.vscode/
+.idea/
