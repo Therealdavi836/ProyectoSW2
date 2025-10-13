@@ -17,7 +17,7 @@ El sistema está compuesto por múltiples microservicios, cada uno encargado de 
 - **Python** (14.9%)
 - **JavaScript** (0.2%)
 
-> **Nota:** Consulta cada repositorio de microservicio para obtener instrucciones detalladas de instalación y uso.
+> **Nota:** Puede consultar cada repositorio de microservicio para obtener instrucciones detalladas de instalación y uso.
 
 ## Repositorios de microservicios
 - [Microservicio de Autenticación](https://github.com/Therealdavi836/Microservice_Authentication.git)
@@ -34,7 +34,7 @@ El sistema está compuesto por múltiples microservicios, cada uno encargado de 
 
 ## Licencia
 
-MIT (heredada de la plantilla base de Laravel).
+MIT
 
 ## Contacto / Mantenimiento
 
@@ -50,4 +50,4 @@ Presentado al docente: **Jose Albeiro Montes Gil**.
 - [Informe de evidencia de ejecución de pruebas de rendimiento](https://docs.google.com/document/d/1S7h12ZzESNoP5FUDjKQ7n9BWXnBOSWf8oHqbKiwUuSc/edit?usp=sharing)
 
 ---
-Para más detalles, revisa la documentación incluida en cada microservicio.
+Para más detalles, puede revisar la documentación incluida en cada microservicio.
