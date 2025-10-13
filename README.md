@@ -4,7 +4,7 @@ Repositorio con el proyecto de Ingeniería de Software 2.
 
 ## Descripción
 
-Este proyecto corresponde a un sistema de concesionario web desarrollado como parte de la asignatura **Ingeniería de Software 2**, bajo la dirección del docente **José Albeiro Montes Gil**. El objetivo principal es la implementación de una arquitectura basada en microservicios, donde cada funcionalidad principal del sistema está desacoplada y mantenida de forma independiente.
+Este proyecto corresponde a un sistema de concesionario web desarrollado como parte de la asignatura **Ingeniería de Software II**, bajo la dirección del docente **Jose Albeiro Montes Gil**. El objetivo principal es la implementación de una arquitectura basada en microservicios, donde cada funcionalidad principal del sistema está desacoplada y mantenida de forma independiente.
 
 ## Arquitectura
 
