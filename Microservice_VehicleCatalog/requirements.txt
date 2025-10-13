@@ -1,0 +1,8 @@
+bson
+pymongo
+fastapi
+uvicorn
+motor
+pydantic
+typing
+requests
