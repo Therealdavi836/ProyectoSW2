@@ -144,7 +144,7 @@ Un informe completo con los resultados y análisis se adjuntará en un **documen
 
 ### Licencia
 
-MIT (heredada de la plantilla base de Laravel).
+MIT.
 
 ---
 
@@ -159,5 +159,5 @@ MIT (heredada de la plantilla base de Laravel).
 
 * Proyecto semestral de **Ingeniería de Software II**, semestre **2025-2**.
 * Presentado al docente: **Jose Albeiro Montes Gil**.
-* Documento de planeación: *https://docs.google.com/document/d/1bnb3KTs5Pmeoy83xN5RjugHqdJ3E_rLXUf8NLsQU5xE/edit?usp=sharing*
-* Informe de evidencia de ejecución de pruebas de rendimiento: *https://docs.google.com/document/d/1S7h12ZzESNoP5FUDjKQ7n9BWXnBOSWf8oHqbKiwUuSc/edit?usp=sharing*
+* [Documento de planeación](https://docs.google.com/document/d/1bnb3KTs5Pmeoy83xN5RjugHqdJ3E_rLXUf8NLsQU5xE/edit?usp=sharing)
+* [Informe de evidencia de ejecución de pruebas de rendimiento](https://docs.google.com/document/d/1S7h12ZzESNoP5FUDjKQ7n9BWXnBOSWf8oHqbKiwUuSc/edit?usp=sharing)
