@@ -1,2 +1,46 @@
-# Proyecto Ingeniería de Software ll
-Repositorio con el proyecto de Ingeniería de Software ll
+# Proyecto de Concesionario Web
+
+Repositorio con el proyecto de Ingeniería de Software II.
+
+## Descripción
+
+Este proyecto corresponde a un sistema de concesionario web desarrollado como parte de la asignatura **Ingeniería de Software II**, bajo la dirección del docente **Jose Albeiro Montes Gil**. El objetivo principal es la implementación de una arquitectura basada en microservicios, donde cada funcionalidad principal del sistema está desacoplada y mantenida de forma independiente.
+
+## Arquitectura
+
+El sistema está compuesto por múltiples microservicios, cada uno encargado de una funcionalidad específica del concesionario (por ejemplo, autenticación, inventario de vehículos, ventas, etc.). Cada microservicio posee su propio repositorio individual, el cual incluye sus respectivas instrucciones de instalación, despliegue y uso. Esto permite un desarrollo, mantenimiento y escalabilidad independiente de cada componente.
+
+> **Nota:** Puede consultar cada repositorio de microservicio para obtener instrucciones detalladas de instalación y uso.
+
+## Repositorios de microservicios
+- [Microservicio de Autenticación](https://github.com/Therealdavi836/Microservice_Authentication.git)
+- [Microservicio de Reportes](https://github.com/Therealdavi836/Microservice_Reports.git)
+- [Microservicio de Catalogo de Vehiculos](https://github.com/Therealdavi836/Microservice_VehicleCatalog.git)
+- [Microservicio de Publicaciones y Ventas](https://github.com/Therealdavi836/Microservice_SalesPublications.git)
+- [Microservicio de Notificaciones](https://github.com/Therealdavi836/Microservice_Notifications.git)
+
+## Organización del proyecto
+
+- Este repositorio es el punto central de coordinación del proyecto.
+- Cada microservicio se encuentra en su propio repositorio independiente.
+- Para desplegar el sistema completo, sigue las instrucciones de cada microservicio según el orden y dependencias especificadas en sus respectivos repos.
+
+## Licencia
+
+MIT
+
+## Contacto / Mantenimiento
+
+- **Autor:** Juan David Fajardo Betancourt  
+- **Email:** jfajardob@unal.edu.co
+
+## Razón
+
+Proyecto semestral de Ingeniería de Software II, semestre 2025-2.  
+Presentado al docente: **Jose Albeiro Montes Gil**.
+
+- [Documento de planeación](https://docs.google.com/document/d/1bnb3KTs5Pmeoy83xN5RjugHqdJ3E_rLXUf8NLsQU5xE/edit?usp=sharing)
+- [Informe de evidencia de ejecución de pruebas de rendimiento](https://docs.google.com/document/d/1S7h12ZzESNoP5FUDjKQ7n9BWXnBOSWf8oHqbKiwUuSc/edit?usp=sharing)
+
+---
+Para más detalles, puede revisar la documentación incluida en cada microservicio.
