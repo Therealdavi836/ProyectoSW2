@@ -32,8 +32,6 @@ class AuthController extends Controller
             'role_id' => $customerRole->id // Siempre asigna 'customer' por defecto, otros roles los asigna el admin
         ]);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
-
         Http::post('http://127.0.0.1:8003/api/notifications/', [
             'user_id' => $user->id,
             'title' => 'Registro exitoso',
@@ -41,7 +39,7 @@ class AuthController extends Controller
             'type' => 'info'
         ]);
 
-        return response()->json(['access_token' => $token, 'token_type' => 'Bearer']);
+        return response()->json(['message' => 'Usuario registrado exitosamente. Ahora puedes iniciar sesión.', 201]);
     }
 
     //Iniciar sesión
