@@ -60,7 +60,7 @@ class NotificationViewSet(viewsets.ModelViewSet):
             print(f"Error al enviar correo: {e}")
 
         # --- Envío de SMS ---
-        """ try:
+        try:
             sid = getattr(settings, "TWILIO_ACCOUNT_SID", None)
             token = getattr(settings, "TWILIO_AUTH_TOKEN", None)
             from_number = getattr(settings, "TWILIO_PHONE_NUMBER", None)
@@ -77,6 +77,6 @@ class NotificationViewSet(viewsets.ModelViewSet):
             else:
                 print("Configuración de Twilio incompleta en settings.py")
         except Exception as e:
-            print(f"Error al enviar SMS: {e}") """
+            print(f"Error al enviar SMS: {e}")
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
