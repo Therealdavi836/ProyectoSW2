@@ -9,30 +9,37 @@ use Illuminate\Support\Facades\Http;
 
 class SaleController extends Controller
 {
-    // Helper para validar usuario en Auth MS
-    private function getAuthenticatedUser($request)
+    private $authServiceUrl;
+    private $gatewayUrl;
+
+    public function __construct()
     {
-        $token = $request->bearerToken();
-        if (!$token) {
-            return null;
-        }
-
-        $authResponse = Http::withToken($token)->get("http://localhost:8000/api/me");
-
-        if ($authResponse->failed()) {
-            return null;
-        }
-
-        return $authResponse->json(); // { id, name, email, role }
+        $this->authServiceUrl = 'http://localhost:8000/api/me'; // Auth MS
+        $this->gatewayUrl = 'http://localhost:8000/api/forward'; // Gateway
     }
 
+    // ================================
+    // Helper para validar usuario en Auth MS
+    // ================================
+    private function getAuthenticatedUser(Request $request)
+    {
+        $token = $request->bearerToken();
+        if (!$token) return null;
+
+        $response = Http::withToken($token)->get($this->authServiceUrl);
+
+        if ($response->failed()) return null;
+
+        return $response->json(); // { id, name, email, role }
+    }
+
+    // ================================
     // Listar ventas (según rol)
+    // ================================
     public function index(Request $request)
     {
         $user = $this->getAuthenticatedUser($request);
-        if (!$user) {
-            return response()->json(['error' => 'Usuario no autenticado'], 401);
-        }
+        if (!$user) return response()->json(['error' => 'Usuario no autenticado'], 401);
 
         if ($user['role'] === 'admin') {
             return Sale::with('publication')->get();
@@ -42,10 +49,16 @@ class SaleController extends Controller
             return Sale::with('publication')->where('customer_id', $user['id'])->get();
         }
 
+        if ($user['role'] === 'seller') {
+            return Sale::with('publication')->where('seller_id', $user['id'])->get();
+        }
+
         return response()->json(['error' => 'No autorizado'], 403);
     }
 
+    // ================================
     // Registrar una venta (solo customer)
+    // ================================
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -54,9 +67,7 @@ class SaleController extends Controller
         ]);
 
         $user = $this->getAuthenticatedUser($request);
-        if (!$user) {
-            return response()->json(['error' => 'Usuario no autenticado'], 401);
-        }
+        if (!$user) return response()->json(['error' => 'Usuario no autenticado'], 401);
 
         if ($user['role'] !== 'customer') {
             return response()->json(['error' => 'Solo clientes pueden comprar'], 403);
@@ -79,32 +90,37 @@ class SaleController extends Controller
         $publication->status = 'vendido';
         $publication->save();
 
-        // Notificar al vendedor
-        Http::post('http://127.0.0.1:8003/api/notifications/', [
-            'user_id' => $sale->seller_id,
-            'title' => 'Venta confirmada',
-            'message' => 'Has vendido tu vehículo exitosamente.',
-            'type' => 'success'
-        ]);
+        // Notificaciones vía gateway
+        $notifications = [
+            [
+                'user_id' => $sale->seller_id,
+                'title'   => 'Venta confirmada',
+                'message' => 'Has vendido tu vehículo exitosamente.',
+                'type'    => 'success'
+            ],
+            [
+                'user_id' => $sale->customer_id,
+                'title'   => 'Compra exitosa',
+                'message' => 'Has comprado un vehículo. Revisa tus detalles de compra en tu cuenta.',
+                'type'    => 'info'
+            ]
+        ];
 
-        // Notificar al comprador
-        Http::post('http://127.0.0.1:8003/api/notifications/', [
-            'user_id' => $sale->customer_id,
-            'title' => 'Compra exitosa',
-            'message' => 'Has comprado un vehículo. Revisa tus detalles de compra en tu cuenta.',
-            'type' => 'info'
-        ]);
+        foreach ($notifications as $note) {
+            Http::withToken($request->bearerToken())
+                ->post("{$this->gatewayUrl}/notifications", $note);
+        }
 
         return response()->json($sale, 201);
     }
 
+    // ================================
     // Ver detalle de una venta
+    // ================================
     public function show(Request $request, $id)
     {
         $user = $this->getAuthenticatedUser($request);
-        if (!$user) {
-            return response()->json(['error' => 'Usuario no autenticado'], 401);
-        }
+        if (!$user) return response()->json(['error' => 'Usuario no autenticado'], 401);
 
         $sale = Sale::with('publication')->findOrFail($id);
 
