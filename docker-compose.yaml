@@ -1,0 +1,161 @@
+# Docker compose para segunda entrega del proyecto SW2
+
+services:
+  # ------------------------------------------------------------
+  # Base de datos MySQL (Auth, SalesPublications, Notifications)
+  # ------------------------------------------------------------
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: microservice_authentication
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      red_publica:
+        ipv4_address: 192.168.100.10
+
+  # ------------------------------------------------------------
+  # Base de datos Mongo (Vehicle Catalog)
+  # ------------------------------------------------------------
+  mongo:
+    image: mongo:6.0
+    container_name: mongo
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      red_publica:
+        ipv4_address: 192.168.100.11
+
+  # ------------------------------------------------------------
+  # Microservicio AUTH (Laravel + Gateway)
+  # ------------------------------------------------------------
+  auth_ms:
+    build:
+      context: ./Microservice_Authentication
+      dockerfile: ../Dockerfile-auth
+    container_name: auth_ms
+    env_file:
+      - ./Microservice_Authentication/.env.docker
+    ports:
+      - "8000:8000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - ./Microservice_Authentication:/var/www/html
+    networks:
+      red_publica:
+        ipv4_address: 192.168.100.20
+
+  # ------------------------------------------------------------
+  # Microservicio Ventas/Publicaciones (Laravel)
+  # ------------------------------------------------------------
+  sales_ms:
+    build:
+      context: ./Microservice_SalesPublications
+      dockerfile: ../Dockerfile-PS
+    container_name: sales_ms
+    env_file:
+      - ./Microservice_SalesPublications/.env.docker
+    ports:
+      - "8002:8002"
+    depends_on:
+      - mysql
+      - auth_ms
+    volumes:
+      - ./Microservice_SalesPublications:/var/www/html
+    networks:
+      red_publica:
+        ipv4_address: 192.168.100.21
+
+  # ------------------------------------------------------------
+  # Microservicio Catálogo (FastAPI + Mongo)
+  # ------------------------------------------------------------
+  catalog_ms:
+    build:
+      context: ./Microservice_VehicleCatalog
+      dockerfile: ../Dockerfile-vehicles
+    container_name: catalog_ms
+    env_file:
+      - ./Microservice_VehicleCatalog/.env.docker
+    ports:
+      - "8001:8001"
+    depends_on:
+      - mongo
+    networks:
+      red_publica:
+        ipv4_address: 192.168.100.22
+
+  # ------------------------------------------------------------
+  # Microservicio Reportes (Flask)
+  # ------------------------------------------------------------
+  reports_ms:
+    build:
+      context: ./Microservice_Reports
+      dockerfile: ../Dockerfile-reports
+    container_name: reports_ms
+    env_file:
+      - ./Microservice_Reports/.env.docker
+    ports:
+      - "5000:5000"
+    depends_on:
+      - auth_ms
+      - sales_ms
+      - catalog_ms
+    volumes:
+      - ./Microservice_Reports:/app
+    networks:
+      red_publica:
+        ipv4_address: 192.168.100.23
+
+  # ------------------------------------------------------------
+  # Microservicio Notificaciones (Django o Python simple)
+  # ------------------------------------------------------------
+  notifications_ms:
+    build:
+      context: ./Microservice_Notifications
+      dockerfile: ../Dockerfile-nts
+    container_name: notifications_ms
+    env_file:
+      - ./Microservice_Notifications/.env.docker
+    ports:
+      - "8003:8003"
+    depends_on:
+      - mysql
+    restart: 
+      always
+    volumes:
+      - ./Microservice_Notifications:/app
+    networks:
+      red_publica:
+        ipv4_address: 192.168.100.24
+
+# ------------------------------------------------------------
+# Volúmenes persistentes
+# ------------------------------------------------------------
+volumes:
+  mysql_data:
+  mongo_data:
+
+# ------------------------------------------------------------
+# Red
+# ------------------------------------------------------------
+networks:
+  red_publica:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.100.0/24
