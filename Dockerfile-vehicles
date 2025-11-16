@@ -1,0 +1,19 @@
+FROM python:3.11-slim
+
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copia el proyecto correctamente
+COPY . .
+
+# Para permitir imports tipo "from app import ..."
+ENV PYTHONPATH="/app"
+
+EXPOSE 8001
+
+# Ejecutar FastAPI correctamente
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8001"]
