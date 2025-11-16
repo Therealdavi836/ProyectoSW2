@@ -1,5 +1,6 @@
 # Archivos sensibles
 .env
+.env.docker
 
 # Archivos de entorno y dependencias
 __pycache__/

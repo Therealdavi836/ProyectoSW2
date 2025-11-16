@@ -1,8 +1,8 @@
 #Creación del CRUD para el microservicio de catálogo de vehículos
 
 #Importamos la base de datos y el modelo de datos
-from .database import vehiculos_collection
-from .models import Vehicle
+from app.database import vehiculos_collection
+from app.models import Vehicle
 from bson import ObjectId
 
 #Función para serializar los datos de los vehículos

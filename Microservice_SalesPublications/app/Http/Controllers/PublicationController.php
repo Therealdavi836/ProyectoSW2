@@ -13,8 +13,8 @@ class PublicationController extends Controller
 
     public function __construct()
     {
-        $this->authServiceUrl = 'http://localhost:8000/api/me'; // Auth MS
-        $this->gatewayUrl = 'http://localhost:8000/api/forward'; // Gateway
+        $this->authServiceUrl = env('AUTH_URL', 'http://auth_ms:8000/api/me');
+        $this->gatewayUrl   = env('GATEWAY_URL', 'http://auth_ms:8000/api/forward');
     }
 
     // Validar token directamente con Auth MS (evita loop)

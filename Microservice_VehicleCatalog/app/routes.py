@@ -1,8 +1,8 @@
 # microservice_catalog/routes.py
 
 from fastapi import APIRouter, HTTPException, Request
-from .models import Vehicle
-from . import crud
+from app.models import Vehicle
+from app import crud
 import requests
 
 router = APIRouter(prefix="/vehicles", tags=["Vehicles"])
