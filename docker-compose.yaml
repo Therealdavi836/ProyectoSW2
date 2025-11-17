@@ -42,11 +42,11 @@ services:
   # ------------------------------------------------------------
   # Microservicio AUTH (Laravel + Gateway)
   # ------------------------------------------------------------
-  auth_ms:
+  auth-ms:
     build:
       context: ./Microservice_Authentication
       dockerfile: ../Dockerfile-auth
-    container_name: auth_ms
+    container_name: auth-ms
     env_file:
       - ./Microservice_Authentication/.env.docker
     ports:
@@ -63,18 +63,18 @@ services:
   # ------------------------------------------------------------
   # Microservicio Ventas/Publicaciones (Laravel)
   # ------------------------------------------------------------
-  sales_ms:
+  sales-ms:
     build:
       context: ./Microservice_SalesPublications
       dockerfile: ../Dockerfile-PS
-    container_name: sales_ms
+    container_name: sales-ms
     env_file:
       - ./Microservice_SalesPublications/.env.docker
     ports:
       - "8002:8002"
     depends_on:
       - mysql
-      - auth_ms
+      - auth-ms
     volumes:
       - ./Microservice_SalesPublications:/var/www/html
     networks:
@@ -84,11 +84,11 @@ services:
   # ------------------------------------------------------------
   # Microservicio Catálogo (FastAPI + Mongo)
   # ------------------------------------------------------------
-  catalog_ms:
+  catalog-ms:
     build:
       context: ./Microservice_VehicleCatalog
       dockerfile: ../Dockerfile-vehicles
-    container_name: catalog_ms
+    container_name: catalog-ms
     env_file:
       - ./Microservice_VehicleCatalog/.env.docker
     ports:
@@ -102,19 +102,19 @@ services:
   # ------------------------------------------------------------
   # Microservicio Reportes (Flask)
   # ------------------------------------------------------------
-  reports_ms:
+  reports-ms:
     build:
       context: ./Microservice_Reports
       dockerfile: ../Dockerfile-reports
-    container_name: reports_ms
+    container_name: reports-ms
     env_file:
       - ./Microservice_Reports/.env.docker
     ports:
       - "5000:5000"
     depends_on:
-      - auth_ms
-      - sales_ms
-      - catalog_ms
+      - auth-ms
+      - sales-ms
+      - catalog-ms
     volumes:
       - ./Microservice_Reports:/app
     networks:
@@ -124,11 +124,11 @@ services:
   # ------------------------------------------------------------
   # Microservicio Notificaciones (Django o Python simple)
   # ------------------------------------------------------------
-  notifications_ms:
+  notifications-ms:
     build:
       context: ./Microservice_Notifications
       dockerfile: ../Dockerfile-nts
-    container_name: notifications_ms
+    container_name: notifications-ms
     env_file:
       - ./Microservice_Notifications/.env.docker
     ports:

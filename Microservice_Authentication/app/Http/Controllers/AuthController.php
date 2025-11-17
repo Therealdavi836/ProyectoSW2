@@ -15,11 +15,11 @@ class AuthController extends Controller
     public function __construct()
     {
         $this->services = [
-            'notifications' => env('NOTIFICATIONS_URL', 'http://127.0.0.1:8003/api/notifications'),
-            'catalog'       => env('CATALOG_URL', 'http://127.0.0.1:8001/vehicles'),
-            'publications'  => env('PUBLICATIONS_URL', 'http://127.0.0.1:8002'),
-            'reports'       => env('REPORTS_URL', 'http://127.0.0.1:5000'),
-            'sales'         => env('SALES_URL','http://127.0.0.1:8002')
+            'notifications' => env('NOTIFICATIONS_URL', 'http://notifications-ms:8003/api/notifications/'),
+            'catalog'       => env('CATALOG_URL', 'http://catalog-ms:8001/vehicles'),
+            'publications'  => env('PUBLICATIONS_URL', 'http://sales-ms:8002'),
+            'reports'       => env('REPORTS_URL', 'http://reports-ms:5000'),
+            'sales'         => env('SALES_URL','http://sales-ms:8002')
         ];
     }
 

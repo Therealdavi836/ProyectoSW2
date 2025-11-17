@@ -13,15 +13,17 @@ class PublicationController extends Controller
 
     public function __construct()
     {
-        $this->authServiceUrl = env('AUTH_URL', 'http://auth_ms:8000/api/me');
-        $this->gatewayUrl   = env('GATEWAY_URL', 'http://auth_ms:8000/api/forward');
+        $this->authServiceUrl = env('AUTH_URL', 'http://auth-ms:8000/api/me');
+        $this->gatewayUrl   = env('GATEWAY_URL', 'http://auth-ms:8000/api/forward');
     }
 
     // Validar token directamente con Auth MS (evita loop)
     private function getAuthenticatedUser(Request $request)
     {
         $token = $request->bearerToken();
-        if (!$token) return null;
+        if ($token && !str_starts_with($token, 'Bearer ')) {
+            $token = 'Bearer ' . $token;
+        }
 
         $response = Http::withToken($token)->get($this->authServiceUrl);
 

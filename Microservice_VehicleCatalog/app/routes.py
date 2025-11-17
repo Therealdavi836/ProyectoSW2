@@ -8,31 +8,36 @@ import requests
 router = APIRouter(prefix="/vehicles", tags=["Vehicles"])
 
 # URL del Gateway para reenviar notificaciones
-GATEWAY_URL = "http://127.0.0.1:8000/api/forward/notifications/"
+GATEWAY_URL = "http://auth-ms:8000/api/forward/notifications/"
 
 # Función auxiliar para enviar notificaciones a través del Gateway
 def send_notification(user_id: int, title: str, message: str, type_: str, token: str):
-    """
-    Envía una notificación al microservicio de notificaciones a través del Gateway.
-    Usa el token que se recibe dinámicamente.
-    """
+    if not token:
+        print("No se envía notificación: token vacío")
+        return
+
+    if not token.startswith("Bearer "):
+        token = f"Bearer {token}"
+
+    payload = {
+        "user_id": user_id,
+        "title": title,
+        "message": message,
+        "type": type_
+    }
+
+    headers = {
+        "Authorization": token,
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+    }
+
     try:
-        requests.post(
-            GATEWAY_URL,
-            headers={
-                "Authorization": token,  # token dinámico recibido desde el request
-                "Accept": "application/json"
-            },
-            json={
-                "user_id": user_id,
-                "title": title,
-                "message": message,
-                "type": type_
-            },
-            timeout=3
-        )
-    except requests.exceptions.RequestException:
-        pass  # Silencia errores de comunicación
+        response = requests.post(GATEWAY_URL, headers=headers, json=payload, timeout=5)
+        print("Gateway status:", response.status_code)
+        print("Gateway response:", response.text)
+    except requests.exceptions.RequestException as e:
+        print("Error enviando notificación:", e)
 
 
 # ==========================
@@ -43,7 +48,6 @@ def send_notification(user_id: int, title: str, message: str, type_: str, token:
 @router.post("/")
 async def create_vehicle(vehicle: Vehicle, request: Request):
     id = await crud.create_vehicle(vehicle)
-
     token = request.headers.get("Authorization", "")
     send_notification(
         user_id=1,
@@ -52,7 +56,6 @@ async def create_vehicle(vehicle: Vehicle, request: Request):
         type_="info",
         token=token
     )
-
     return {"id": id}
 
 
@@ -86,7 +89,6 @@ async def update_vehicle(id: str, vehicle: Vehicle, request: Request):
         type_="info",
         token=token
     )
-
     return updated_vehicle
 
 
@@ -105,5 +107,4 @@ async def delete_vehicle(id: str, request: Request):
         type_="warning",
         token=token
     )
-
     return {"message": "Vehículo eliminado correctamente"}
