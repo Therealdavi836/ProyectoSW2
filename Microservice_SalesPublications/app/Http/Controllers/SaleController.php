@@ -14,8 +14,8 @@ class SaleController extends Controller
 
     public function __construct()
     {
-        $this->authServiceUrl = env('AUTH_URL', 'http://auth_ms:8000/api/me');
-        $this->gatewayUrl   = env('GATEWAY_URL', 'http://auth_ms:8000/api/forward');
+        $this->authServiceUrl = env('AUTH_URL', 'http://auth-ms:8000/api/me');
+        $this->gatewayUrl   = env('GATEWAY_URL', 'http://auth-ms:8000/api/forward');
     }
 
     // ================================
@@ -24,15 +24,23 @@ class SaleController extends Controller
     private function getAuthenticatedUser(Request $request)
     {
         $token = $request->bearerToken();
-        if (!$token) return null;
+        if ($token && !str_starts_with($token, 'Bearer ')) {
+            $token = 'Bearer ' . $token;
+        }
 
         $response = Http::withToken($token)->get($this->authServiceUrl);
 
         if ($response->failed()) return null;
 
-        return $response->json(); // { id, name, email, role }
+        $user = $response->json();
+        return [
+            'id'    => $user['id'],
+            'name'  => $user['name'],
+            'email' => $user['email'],
+            'role'  => $user['role'], // lo que devuelve Auth MS
+        ];
     }
-
+    
     // ================================
     // Listar ventas (según rol)
     // ================================

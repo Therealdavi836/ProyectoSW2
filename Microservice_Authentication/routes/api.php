@@ -15,7 +15,7 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::get('/me', [AuthController::class, 'me']);
 
     // Usuarios solo admin
-    Route::middleware('checkrole:admin')->get('/users', [UserController::class, 'index']);
+    Route::middleware('checkrole:Administrator')->get('/users', [UserController::class, 'index']);
 
     // Gateway genérico para microservicios (endpoint opcional y wildcard)
     Route::match(['get', 'post', 'put', 'delete', 'patch'],
