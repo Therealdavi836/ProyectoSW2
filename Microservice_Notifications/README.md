@@ -160,6 +160,8 @@ Este microservicio es **consumido** por:
 
 No utiliza autenticación JWT, ya que solo recibe información estructurada y el `user_id` desde los otros microservicios.
 
+El consumo entre microservicios se hace a través del API Gateway implementado en el microservicio de Autenticación 
+
 Comunicación vía **HTTP REST** con solicitudes tipo `POST` hacia:
 
 ```API
@@ -193,11 +195,75 @@ python manage.py runserver 8003
 
 ---
 
+### Contenerización con docker 
+
+Para la segunda entrega del proyecto se contenerizaron los servicios del proyecto mediante un archivo docker compose, a continuación se presenta el fragmento del docker compose y el dockefile correspondiente a este microservicio:
+
+```Docker
+FROM python:3.11-slim
+
+# Establecemos el directorio de trabajo
+WORKDIR /app
+
+# Instalación de dependencias del sistema para mysqlclient
+RUN apt-get update && apt-get install -y \
+    gcc \
+    default-libmysqlclient-dev \
+    pkg-config \
+    curl \
+    --no-install-recommends \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
+
+# Copiamos requirements e instalamos dependencias de Python
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copiamos todo el proyecto
+COPY . .
+
+# Agregamos wait-for-it para esperar MySQL
+RUN curl -sSL https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh -o /wait-for-it.sh \
+ && chmod +x /wait-for-it.sh
+
+# Exponemos el puerto
+EXPOSE 8003
+
+# Comando de arranque: espera MySQL, aplica migraciones y levanta Gunicorn
+CMD ["sh", "-c", "/wait-for-it.sh mysql:3306 --timeout=30 --strict -- python manage.py migrate --noinput && gunicorn Microservice_Notifications.wsgi:application --bind 0.0.0.0:8003"]
+```
+
+```Docker-compose
+# ------------------------------------------------------------
+  # Microservicio Notificaciones (Django o Python simple)
+  # ------------------------------------------------------------
+  notifications-ms:
+    build:
+      context: ./Microservice_Notifications
+      dockerfile: ../Dockerfile-nts
+    container_name: notifications-ms
+    env_file:
+      - ./Microservice_Notifications/.env.docker
+    ports:
+      - "8003:8003"
+    depends_on:
+      - mysql
+    restart: 
+      always
+    volumes:
+      - ./Microservice_Notifications:/app
+    networks:
+      red_publica:
+        ipv4_address: 192.168.100.24
+```
+
+---
+
 ## Roadmap futuro
 
 * Integrar servicios de correo **profesionales** (SendGrid o AWS SES).
 * Incorporar **WebSockets o Firebase Cloud Messaging** para notificaciones en tiempo real.
-* Implementar **Docker y Kubernetes** para orquestación.
+* Implementar **Kubernetes** para orquestación.
 * Filtrado y paginación avanzada de notificaciones.
 
 ---
