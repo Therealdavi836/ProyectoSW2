@@ -183,10 +183,57 @@ Se realizaron pruebas de **carga y capacidad** con **Locust**, cuyos archivos se
 
 ---
 
+### Contenerización con docker 
+
+Para la segunda entrega del proyecto se contenerizaron los servicios del proyecto mediante un archivo docker compose, a continuación se presenta el fragmento del docker compose y el dockefile correspondiente a este microservicio:
+
+```Docker
+FROM python:3.11-slim
+
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copia el proyecto correctamente
+COPY . .
+
+# Para permitir imports tipo "from app import ..."
+ENV PYTHONPATH="/app"
+
+EXPOSE 8001
+
+# Ejecutar FastAPI correctamente
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8001"]
+```
+
+```Docker-compose
+# ------------------------------------------------------------
+  # Microservicio Catálogo (FastAPI + Mongo)
+  # ------------------------------------------------------------
+  catalog-ms:
+    build:
+      context: ./Microservice_VehicleCatalog
+      dockerfile: ../Dockerfile-vehicles
+    container_name: catalog-ms
+    env_file:
+      - ./Microservice_VehicleCatalog/.env.docker
+    ports:
+      - "8001:8001"
+    depends_on:
+      - mongo
+    networks:
+      red_publica:
+        ipv4_address: 192.168.100.22
+```
+
+---
+
 ### Futuras implementaciones
 
 * Protección de rutas mediante autenticación con token Bearer.
-* Contenedorización con **Docker**.
 * Orquestación con **Kubernetes**.
 * Implementación de búsquedas y filtros avanzados.
 
