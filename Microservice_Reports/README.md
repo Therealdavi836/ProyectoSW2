@@ -134,10 +134,55 @@ Los archivos `.py` correspondientes a dichas pruebas se encuentran incluidos en 
 Un informe completo con los resultados y análisis se adjuntará en un **documento de Google Drive** enlazado próximamente.
 
 ---
+### Contenerización con docker 
+
+Para la segunda entrega del proyecto se contenerizaron los servicios del proyecto mediante un archivo docker compose, a continuación se presenta el fragmento del docker compose y el dockefile correspondiente a este microservicio:
+
+```Docker
+FROM python:3.11-slim
+
+ENV PYTHONUNBUFFERED=1
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+EXPOSE 5000
+
+CMD ["python", "app.py"]
+```
+
+```Docker-compose
+# ------------------------------------------------------------
+  # Microservicio Reportes (Flask)
+  # ------------------------------------------------------------
+  reports-ms:
+    build:
+      context: ./Microservice_Reports
+      dockerfile: ../Dockerfile-reports
+    container_name: reports-ms
+    env_file:
+      - ./Microservice_Reports/.env.docker
+    ports:
+      - "5000:5000"
+    depends_on:
+      - auth-ms
+      - sales-ms
+      - catalog-ms
+    volumes:
+      - ./Microservice_Reports:/app
+    networks:
+      red_publica:
+        ipv4_address: 192.168.100.23
+```
+
+---
 
 ### Futuras implementaciones
 
-* Integración de **Docker** y **Kubernetes** para orquestación y despliegue.
+* Integración de **Kubernetes** para orquestación y despliegue.
 * Posible extensión para generación de reportes dinámicos y gráficos visuales.
 
 ---
