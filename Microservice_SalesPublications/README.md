@@ -121,9 +121,62 @@ El microservicio cuenta con una carpeta `Locust_Test` que incluye **cuatro archi
 
 ---
 
+### Contenerización con docker 
+
+Para la segunda entrega del proyecto se contenerizaron los servicios del proyecto mediante un archivo docker compose, a continuación se presenta el fragmento del docker compose y el dockefile correspondiente a este microservicio:
+```Docker
+FROM php:8.2-fpm
+
+RUN apt-get update && apt-get install -y \
+    git unzip libzip-dev libonig-dev libpng-dev libicu-dev zlib1g-dev \
+    default-mysql-client \
+ && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath zip intl
+
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+WORKDIR /var/www/html
+
+COPY composer.json composer.lock ./
+RUN composer install --no-interaction --prefer-dist --no-dev || true
+
+COPY . .
+
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
+ && chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
+
+EXPOSE 8002
+
+CMD ["sh", "-c", "php artisan migrate --force || true && php artisan serve --host=0.0.0.0 --port=8002"]
+
+```
+
+```Docker-compose
+# ------------------------------------------------------------
+  # Microservicio Ventas/Publicaciones (Laravel)
+  # ------------------------------------------------------------
+  sales-ms:
+    build:
+      context: ./Microservice_SalesPublications
+      dockerfile: ../Dockerfile-PS
+    container_name: sales-ms
+    env_file:
+      - ./Microservice_SalesPublications/.env.docker
+    ports:
+      - "8002:8002"
+    depends_on:
+      - mysql
+      - auth-ms
+    volumes:
+      - ./Microservice_SalesPublications:/var/www/html
+    networks:
+      red_publica:
+        ipv4_address: 192.168.100.21
+```
+---
+
 ## Roadmap / Futuras mejoras
 
-* Integración completa con **Docker** y **Kubernetes**.
+* Integración completa con **Kubernetes**.
 * Posible adición de filtros de búsqueda y estadísticas de ventas.
 * Mejoras en la comunicación asíncrona entre microservicios.
 
