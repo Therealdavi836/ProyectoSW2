@@ -92,9 +92,64 @@ El informe detallado de dichas pruebas se encuentra disponible en un documento c
 
 ---
 
+### Contenerización con docker 
+
+Para la segunda entrega del proyecto se contenerizaron los servicios del proyecto mediante un archivo docker compose, a continuación se presenta el fragmento del docker compose y el dockefile correspondiente a este microservicio:
+   ```Docker
+   FROM php:8.2-fpm
+
+   # Sistema y extensiones
+   RUN apt-get update && apt-get install -y \
+      git unzip libzip-dev libonig-dev libpng-dev libicu-dev zlib1g-dev \
+      default-mysql-client \
+   && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath zip intl
+
+   # Composer
+   COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+   WORKDIR /var/www/html
+
+   # Copiar composer files primero para cache
+   COPY composer.json composer.lock ./
+   RUN composer install --no-dev --prefer-dist --no-interaction --no-plugins --no-scripts || true
+
+   # Copiar todo el código
+   COPY . .
+
+   # Permisos
+   RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
+   && chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
+
+   EXPOSE 8000
+
+   # Nota: ejecutamos artisan serve para desarrollo; en producción usar PHP-FPM + nginx.
+   CMD ["sh", "-c", "php artisan key:generate --force || true && php artisan migrate --force || true && php artisan serve --host=0.0.0.0 --port=8000"]
+   ```
+   ```Docker-compose
+   # ------------------------------------------------------------
+   # Microservicio AUTH (Laravel + Gateway)
+   # ------------------------------------------------------------
+   auth-ms:
+      build:
+         context: ./Microservice_Authentication
+         dockerfile: ../Dockerfile-auth
+      container_name: auth-ms
+      env_file:
+         - ./Microservice_Authentication/.env.docker
+      ports:
+         - "8000:8000"
+      depends_on:
+         mysql:
+         condition: service_healthy
+      volumes:
+         - ./Microservice_Authentication:/var/www/html
+      networks:
+         red_publica:
+         ipv4_address: 192.168.100.20
+   ```
+
 ### Contenido próximo a implementar
 
-* Contenerización con **Docker**.
 * Orquestación con **Kubernetes**.
 * Recuperación de contraseñas.
 * Refresco de tokens.
