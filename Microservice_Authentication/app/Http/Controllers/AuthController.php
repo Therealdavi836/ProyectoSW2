@@ -19,7 +19,7 @@ class AuthController extends Controller
             'catalog'       => env('CATALOG_URL', 'http://catalog-ms:8001/vehicles'),
             'publications'  => env('PUBLICATIONS_URL', 'http://sales-ms:8002'),
             'reports'       => env('REPORTS_URL', 'http://reports-ms:5000'),
-            'sales'         => env('SALES_URL','http://sales-ms:8002')
+            'sales'         => env('SALES_URL','http://sales-ms:8002/api/sales'),   
         ];
     }
 

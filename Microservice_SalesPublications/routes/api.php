@@ -27,6 +27,7 @@ Route::delete('/publications/{id}', [PublicationController::class, 'destroy']);
 Route::patch('/publications/{id}/status', [PublicationController::class, 'changeStatus']);
 
 // Rutas de ventas
+
 Route::get('/sales', [SaleController::class, 'index']);
 Route::post('/sales', [SaleController::class, 'store']);
 Route::get('/sales/{id}', [SaleController::class, 'show']);
