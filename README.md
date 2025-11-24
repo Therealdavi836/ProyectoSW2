@@ -266,6 +266,51 @@ Sin embargo, están en repositorios y proyectos diferentes con:
 
 Por eso los contenedores deben construirse por separado, aunque ambos usen Laravel.
 
+## Bases de datos
+
+Se construyeron las bases de datos (MySQL y Mongo) en el archivo de Docker-compose.yaml de la siguiente manera, para la base de datos de MySQL se incluyo un archivo de inicialización para crear las bases de datos automaticamente dentro de los contenedores, el servicio de mongo no necesita script automatico, con solo añadir un registro crea la base automaticamente con su colección asociada segun FastAPI
+
+```Docker-compose
+# ------------------------------------------------------------
+  # Base de datos MySQL (Auth, SalesPublications, Notifications)
+  # ------------------------------------------------------------
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: microservice_authentication
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      red_publica:
+        ipv4_address: 192.168.100.10
+
+  # ------------------------------------------------------------
+  # Base de datos Mongo (Vehicle Catalog)
+  # ------------------------------------------------------------
+  mongo:
+    image: mongo:6.0
+    container_name: mongo
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      red_publica:
+        ipv4_address: 192.168.100.11
+```
+Ambos contenedores ejecutan un chequeo de salud para validar funcionamiento y monitorización.
+
 ## Licencia
 
 MIT
